@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Response Download</title>
+</head>
+<body>
+    <button id="apiButton">Call API</button>
+
+    <script>
+        const apiButton = document.getElementById('apiButton');
+
+        apiButton.addEventListener('click', () => {
+            // Replace 'API_URL' with your actual API endpoint
+            const apiUrl = 'https://example.com/api/endpoint';
+            
+            // Make the API call using the fetch API
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text(); // Assuming the response is text/plain
+                })
+                .then(data => {
+                    // Create a Blob with the response data
+                    const blob = new Blob([data], { type: 'text/plain' });
+                    
+                    // Create a temporary anchor element to trigger the download
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'api_response.txt';
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    
+                    // Simulate a click on the anchor element to start the download
+                    a.click();
+                    
+                    // Clean up
+                    URL.revokeObjectURL(a.href);
+                    document.body.removeChild(a);
+                })
+                .catch(error => {
+                    console.error('An error occurred:', error);
+                });
+        });
+    </script>
+</body>
+</html>
